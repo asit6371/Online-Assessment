@@ -4,6 +4,8 @@ import com.onlineassessment.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @Table(name = "submissions")
@@ -28,5 +30,9 @@ public class Submission {
     private String code;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status;
+
+    private LocalDateTime submittedAt;
+
 }
