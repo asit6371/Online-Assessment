@@ -1,5 +1,6 @@
 package com.onlineassessment.service;
 
+import com.onlineassessment.Config.JwtService;
 import com.onlineassessment.dto.LoginRequestDto;
 import com.onlineassessment.dto.LoginResponseDto;
 import com.onlineassessment.dto.UserRequestDto;
@@ -7,6 +8,7 @@ import com.onlineassessment.dto.UserResponseDto;
 import com.onlineassessment.entity.User;
 import com.onlineassessment.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +20,15 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
+    @Autowired
+    private JwtService jwtService;
+
+
     public UserResponseDto registerUser(UserRequestDto userRequestDto) {
         Optional<User> email = userRepository.findByEmail(userRequestDto.getEmail());
 
@@ -29,7 +40,7 @@ public class UserService {
 
         user.setName(userRequestDto.getName());
         user.setEmail(userRequestDto.getEmail());
-        user.setPassword(userRequestDto.getPassword());
+        user.setPassword(bCryptPasswordEncoder.encode(userRequestDto.getPassword()));
 
         User savedUser = userRepository.save(user);
 
@@ -52,15 +63,18 @@ public class UserService {
 
         User user = byEmail.get();
 
-        if (!user.getPassword().equals(loginRequestDto.getPassword())) {
+        if (!bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid password!");
         }
+
+        String token = jwtService.generateToken(user.getEmail());
 
         LoginResponseDto loginResponseDto = new LoginResponseDto();
 
         loginResponseDto.setUserId(user.getId());
         loginResponseDto.setName(user.getName());
         loginResponseDto.setEmail(user.getEmail());
+        loginResponseDto.setToken(token);
         loginResponseDto.setMessage("Logged in successfully");
 
         return loginResponseDto;
