@@ -33,7 +33,7 @@ public class AdminInitializer implements CommandLineRunner {
             admin.setName("Admin");
             admin.setEmail(adminEmail);
             admin.setPassword(
-                    passwordEncoder.encode("admin123")
+                    passwordEncoder.encode("Judgex@123")
             );
 
             admin.setRole(RoleEnum.ADMIN.ADMIN);
