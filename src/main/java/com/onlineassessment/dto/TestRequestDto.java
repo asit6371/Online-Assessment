@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TestDto {
+public class TestRequestDto {
 
     @Positive
     private long userId;
@@ -16,4 +16,10 @@ public class TestDto {
     @NotNull
     @NotEmpty
     private List<Long> questionIds;
+
+    private String title;
+
+    private String description;
+
+    private Integer durationMinutes;
 }

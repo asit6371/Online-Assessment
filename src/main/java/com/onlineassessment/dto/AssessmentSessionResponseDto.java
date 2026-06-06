@@ -1,16 +1,20 @@
 package com.onlineassessment.dto;
 
+import com.onlineassessment.enums.AssessmentCategory;
+import com.onlineassessment.enums.SessionStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class TestResponseDto {
+public class AssessmentSessionResponseDto {
 
     private long id;
 
     private long userId;
+
+    private AssessmentCategory category;
 
     private List<Long> questionIds;
 
@@ -18,9 +22,7 @@ public class TestResponseDto {
 
     private LocalDateTime endTime;
 
-    private String title;
+    private int durationMinutes;
 
-    private String description;
-
-    private Integer durationMinutes;
+    private SessionStatus status;
 }

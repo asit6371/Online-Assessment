@@ -2,7 +2,10 @@ package com.onlineassessment.service;
 
 import com.onlineassessment.dto.QuestionRequestDto;
 import com.onlineassessment.dto.QuestionResponseDto;
+import com.onlineassessment.dto.TestCaseDto;
 import com.onlineassessment.entity.Question;
+import com.onlineassessment.entity.TestCase;
+import com.onlineassessment.exception.QuestionNotFoundException;
 import com.onlineassessment.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +21,13 @@ public class QuestionService {
     private QuestionRepository questionRepository;
 
     public QuestionResponseDto createQuestion(
-            QuestionRequestDto questionRequestDto) {
-
+            QuestionRequestDto questionRequestDto
+    ) {
         if (questionRepository.existsByTitle(
                 questionRequestDto.getTitle())) {
-
-            throw new RuntimeException(
-                    "Question title already exists");
+            throw new QuestionNotFoundException(
+                    "Question title already exists"
+            );
         }
 
         Question question = new Question();
@@ -36,6 +39,23 @@ public class QuestionService {
         question.setConstraints(questionRequestDto.getConstraints());
         question.setDifficulty(questionRequestDto.getDifficulty());
         question.setTopic(questionRequestDto.getTopic());
+        question.setStarterCode(questionRequestDto.getStarterCode());
+        question.setDriverCode(questionRequestDto.getDriverCode());
+
+        List<TestCase> testCases = new ArrayList<>();
+
+        for (TestCaseDto dto : questionRequestDto.getTestCases()) {
+            TestCase testCase = new TestCase();
+            testCase.setInput(dto.getInput());
+            testCase.setExpectedOutput(dto.getExpectedOutput());
+            testCase.setHidden(dto.isHidden());
+
+            // IMPORTANT: set owning side of relationship
+            testCase.setQuestion(question);
+            testCases.add(testCase);
+        }
+
+        question.setTestCases(testCases);
 
         Question saved = questionRepository.save(question);
 
@@ -43,38 +63,32 @@ public class QuestionService {
     }
 
     public List<QuestionResponseDto> getAllQuestion() {
-
-        List<Question> findAllQuestions =
-                questionRepository.findAll();
-
-        List<QuestionResponseDto> responseList =
-                new ArrayList<>();
-
-        for (Question question : findAllQuestions) {
-
-            responseList.add(mapToDto(question));
+        List<Question> all = questionRepository.findAll();
+        List<QuestionResponseDto> result = new ArrayList<>();
+        for (Question q : all) {
+            result.add(mapToDto(q));
         }
-
-        return responseList;
+        return result;
     }
 
     public QuestionResponseDto getQuestionById(long id) {
-
-        Optional<Question> question =
-                questionRepository.findById(id);
-
+        Optional<Question> question = questionRepository.findById(id);
         if (question.isEmpty()) {
-            throw new RuntimeException(
-                    "Question does not exist!");
+            throw new QuestionNotFoundException("Question does not exist!");
         }
-
         return mapToDto(question.get());
     }
 
-    private QuestionResponseDto mapToDto(Question question) {
+    public Question getQuestionEntityById(long id) {
+        return questionRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new QuestionNotFoundException("Question not found!")
+                );
+    }
 
-        QuestionResponseDto response =
-                new QuestionResponseDto();
+    private QuestionResponseDto mapToDto(Question question) {
+        QuestionResponseDto response = new QuestionResponseDto();
 
         response.setId(question.getId());
         response.setTitle(question.getTitle());
@@ -84,6 +98,9 @@ public class QuestionService {
         response.setConstraints(question.getConstraints());
         response.setDifficulty(question.getDifficulty());
         response.setTopic(question.getTopic());
+
+        // starterCode goes to frontend — driverCode stays on backend only
+        response.setStarterCode(question.getStarterCode());
 
         return response;
     }

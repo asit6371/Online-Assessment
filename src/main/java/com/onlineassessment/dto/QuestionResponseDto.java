@@ -22,4 +22,11 @@ public class QuestionResponseDto {
     private Difficulty difficulty;
 
     private Topic topic;
+
+    /*
+        Sent to frontend — user sees and edits this in the editor.
+        driverCode is intentionally NOT included here.
+        The driver stays hidden on the backend only.
+    */
+    private String starterCode;
 }

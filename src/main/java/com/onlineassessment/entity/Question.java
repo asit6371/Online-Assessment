@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @Table(name = "questions")
 public class Question {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -45,7 +46,38 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private Topic topic;
 
+    /*
+        What the user sees and edits in the code editor.
+        Contains only the Solution class with the method signature.
+        Example:
+            class Solution {
+                public static int[] twoSum(int[] nums, int target) {
+                    // write your solution here
+                }
+            }
+    */
+    @Column(columnDefinition = "TEXT")
+    private String starterCode;
+
+    /*
+        Hidden from the user.
+        Contains the Main class that:
+          1. Reads raw test case input from stdin
+          2. Calls the Solution method
+          3. Prints the result to stdout
+        The judge concatenates: driverCode + userCode → compiles → runs
+    */
+    @Column(columnDefinition = "TEXT")
+    private String driverCode;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "questions")
     private List<Test> tests;
+
+    @OneToMany(
+            mappedBy = "question",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<TestCase> testCases;
 }

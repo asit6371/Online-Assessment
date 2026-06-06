@@ -1,12 +1,14 @@
 package com.onlineassessment.controller;
 
-import com.onlineassessment.dto.TestDto;
+import com.onlineassessment.dto.TestRequestDto;
 import com.onlineassessment.dto.TestResponseDto;
 import com.onlineassessment.service.TestService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/tests")
@@ -17,9 +19,9 @@ public class TestController {
 
     @PostMapping
     public ResponseEntity<TestResponseDto> createTest(
-            @Valid @RequestBody TestDto testDto) {
+            @Valid @RequestBody TestRequestDto testRequestDto) {
 
-        TestResponseDto test = testService.createTest(testDto);
+        TestResponseDto test = testService.createTest(testRequestDto);
 
         return ResponseEntity.ok(test);
     }
@@ -31,5 +33,27 @@ public class TestController {
         TestResponseDto started = testService.startTest(id);
 
         return ResponseEntity.ok(started);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TestResponseDto>>
+    getAllTests() {
+
+        List<TestResponseDto> tests =
+                testService.getAllTests();
+
+        return ResponseEntity.ok(tests);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TestResponseDto>
+    getTestById(
+            @PathVariable long id
+    ) {
+
+        TestResponseDto test =
+                testService.getTestById(id);
+
+        return ResponseEntity.ok(test);
     }
 }

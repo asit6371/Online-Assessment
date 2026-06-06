@@ -2,6 +2,7 @@ package com.onlineassessment.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.onlineassessment.enums.RoleEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -41,4 +42,8 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Submission> submissions;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RoleEnum role;
 }

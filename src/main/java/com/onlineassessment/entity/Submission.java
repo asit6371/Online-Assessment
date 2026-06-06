@@ -1,6 +1,6 @@
 package com.onlineassessment.entity;
 
-import com.onlineassessment.enums.Status;
+import com.onlineassessment.judge.enums.Verdict;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,29 +10,44 @@ import java.time.LocalDateTime;
 @Data
 @Table(name = "submissions")
 public class Submission {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "question_id", nullable = false)
+    @JoinColumn(
+            name = "question_id",
+            nullable = false
+    )
     private Question question;
 
     @ManyToOne
-    @JoinColumn(name = "test_id", nullable = false)
-    private Test test;
+    @JoinColumn(
+            name = "session_id",
+            nullable = false
+    )
+    private AssessmentSession session;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false
+    )
     private User user;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String code;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Status status;
 
     private LocalDateTime submittedAt;
 
+    @Enumerated(EnumType.STRING)
+    private Verdict verdict;
+
+    private int passedTestCases;
+
+    private int totalTestCases;
 }

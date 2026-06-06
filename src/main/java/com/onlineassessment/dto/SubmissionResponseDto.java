@@ -1,6 +1,6 @@
 package com.onlineassessment.dto;
 
-import com.onlineassessment.enums.Status;
+import com.onlineassessment.judge.enums.Verdict;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -12,13 +12,17 @@ public class SubmissionResponseDto {
 
     private long userId;
 
-    private long testId;
+    private long sessionId;
 
     private long questionId;
 
     private String code;
 
-    private Status status;
+    private Verdict verdict;
+
+    private int passedTestCases;
+
+    private int totalTestCases;
 
     private LocalDateTime submittedAt;
 }

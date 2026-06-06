@@ -17,6 +17,14 @@ public class QuestionController {
     @Autowired
     private QuestionService questionService;
 
+    /**
+     * FIX 1:
+     *      when user don't have permission to create question.
+     *      it should return message called don't have permission.
+     *
+     *
+     */
+
     @PostMapping
     public ResponseEntity<QuestionResponseDto> createQuestion(
             @Valid @RequestBody QuestionRequestDto questionRequestDto) {
