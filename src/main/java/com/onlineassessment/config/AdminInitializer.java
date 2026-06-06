@@ -29,18 +29,16 @@ public class AdminInitializer implements CommandLineRunner {
         if (!userRepository.existsByEmail(adminEmail)) {
 
             User admin = new User();
-
             admin.setName("Admin");
             admin.setEmail(adminEmail);
-            admin.setPassword(
-                    passwordEncoder.encode("Judgex@123")
-            );
-
-            admin.setRole(RoleEnum.ADMIN.ADMIN);
+            admin.setPassword(passwordEncoder.encode("Judgex@123"));
+            admin.setRole(RoleEnum.ADMIN);
 
             userRepository.save(admin);
 
-            System.out.println("Admin user created successfully.");
+            System.out.println("✅ Admin user created successfully.");
+        } else {
+            System.out.println("✅ Admin user already exists.");
         }
     }
 }
