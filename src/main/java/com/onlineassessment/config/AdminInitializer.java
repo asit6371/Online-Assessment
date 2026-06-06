@@ -24,7 +24,7 @@ public class AdminInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        String adminEmail = "admin@assessmate.com";
+        String adminEmail = "admin@judgex.com";
 
         if (!userRepository.existsByEmail(adminEmail)) {
 
