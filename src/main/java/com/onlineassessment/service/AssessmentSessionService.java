@@ -70,7 +70,7 @@ public class AssessmentSessionService {
 
         // 4. Create a fresh session for this user
         //    Every user gets their own independent session — no shared state
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(java.time.ZoneOffset.UTC);
 
         AssessmentSession session = new AssessmentSession();
         session.setUser(user);
