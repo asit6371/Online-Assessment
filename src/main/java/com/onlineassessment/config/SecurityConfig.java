@@ -48,6 +48,10 @@ public class SecurityConfig {
                                 "/sessions/start/**"
                         ).hasAnyRole("ADMIN", "USER")
 
+                        //Overview endpoint
+                        .requestMatchers(HttpMethod.GET, "/overview/**")
+                        .hasAnyRole("ADMIN", "USER")
+
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/sessions/**"
