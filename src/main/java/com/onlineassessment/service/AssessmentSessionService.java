@@ -95,7 +95,7 @@ public class AssessmentSessionService {
 
         // Auto-expire if time has passed
         if (session.getStatus() == SessionStatus.IN_PROGRESS
-                && LocalDateTime.now().isAfter(session.getEndTime())) {
+                && LocalDateTime.now(java.time.ZoneOffset.UTC).isAfter(session.getEndTime())) {
 
             session.setStatus(SessionStatus.EXPIRED);
             sessionRepository.save(session);
