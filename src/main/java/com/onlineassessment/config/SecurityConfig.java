@@ -84,6 +84,23 @@ public class SecurityConfig {
                                 "/tests"
                         ).hasRole("ADMIN")
 
+                        // System Design -- Users : read content
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/system-design/**"
+                        ).hasAnyRole("ADMIN", "USER")
+
+                        // System Design - Progress (Visit/Complete)
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/system-design/progress/**"
+                        ).hasAnyRole("ADMIN", "USER")
+
+                        // X AI
+                        .requestMatchers(
+                                "/xai/**"
+                        ).hasAnyRole("ADMIN", "USER")
+
                         .anyRequest().authenticated()
                 )
 

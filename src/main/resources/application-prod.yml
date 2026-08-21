@@ -11,3 +11,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+groq:
+  api:
+    key: ${GROQ_API_KEY}
