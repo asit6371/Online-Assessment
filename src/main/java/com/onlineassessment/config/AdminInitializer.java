@@ -15,8 +15,7 @@ public class AdminInitializer implements CommandLineRunner {
 
     public AdminInitializer(
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder
-    ) {
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -41,4 +40,5 @@ public class AdminInitializer implements CommandLineRunner {
             System.out.println("✅ Admin user already exists.");
         }
     }
+
 }
