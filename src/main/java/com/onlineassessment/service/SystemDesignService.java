@@ -103,8 +103,9 @@ public class SystemDesignService {
         List<SystemDesignTrackResponseDto> result = new ArrayList<>();
 
         for (SystemDesignTrack track : tracks) {
-            int completed = progressRepository
-                    .countByUserIdAndStatus(userId, TopicStatus.COMPLETED);
+            int completed = userId > 0
+                    ? progressRepository.countCompletedByUserIdAndTrackId(userId, track.getId())
+                    : 0;
             double percent = track.getTotalTopics() == 0
                     ? 0.0
                     : Math.round((double) completed / track.getTotalTopics() * 10000.0) / 100.0;
@@ -127,8 +128,9 @@ public class SystemDesignService {
 
         for (SystemDesignPhase phase : phases) {
             int totalTopics = topicRepository.countByPhaseId(phase.getId());
-            int completedTopics = progressRepository
-                    .findCompletedByUserIdAndPhaseId(userId, phase.getId()).size();
+            int completedTopics = userId > 0
+                    ? progressRepository.findCompletedByUserIdAndPhaseId(userId, phase.getId()).size()
+                    : 0;
             result.add(mapPhaseToDto(phase, totalTopics, completedTopics));
         }
 

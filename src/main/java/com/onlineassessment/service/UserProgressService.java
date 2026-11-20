@@ -117,32 +117,15 @@ public class UserProgressService {
     public UserProgressSummaryDto getSummary(long userId) {
         getUser(userId); // validate user exists
 
-        int totalCompleted = progressRepository
-                .countByUserIdAndStatus(userId, TopicStatus.COMPLETED);
+        int lldCompleted = progressRepository.countCompletedByUserIdAndTrackType(userId, com.onlineassessment.enums.TrackType.LLD);
+        int hldCompleted = progressRepository.countCompletedByUserIdAndTrackType(userId, com.onlineassessment.enums.TrackType.HLD);
+        int totalCompleted = lldCompleted + hldCompleted;
 
         int totalTopics = (int) topicRepository.count();
 
         int totalTimeSpent = sessionRepository.sumDurationByUserId(userId);
 
         int streak = calculateStreak(userId);
-
-        // LLD vs HLD breakdown
-        List<SystemDesignTrack> tracks = trackRepository.findAll();
-        int lldCompleted = 0;
-        int hldCompleted = 0;
-
-        for (SystemDesignTrack track : tracks) {
-            List<Long> trackTopicIds = getTopicIdsForTrack(track.getId());
-            long count = progressRepository.findByUserId(userId).stream()
-                    .filter(p -> trackTopicIds.contains(p.getTopic().getId()))
-                    .filter(p -> p.getStatus() == TopicStatus.COMPLETED)
-                    .count();
-
-            switch (track.getTrackType()) {
-                case LLD -> lldCompleted = (int) count;
-                case HLD -> hldCompleted = (int) count;
-            }
-        }
 
         double overallPercent = totalTopics == 0
                 ? 0.0

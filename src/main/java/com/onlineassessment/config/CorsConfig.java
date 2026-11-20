@@ -20,7 +20,9 @@ public class CorsConfig {
 
         configuration.setAllowedOrigins(
                 List.of(
-                        "https://judgex-app.vercel.app"
+                        "https://judgex-app.vercel.app",
+                        "http://localhost:5173",
+                        "http://localhost:3000"
                 )
         );
 

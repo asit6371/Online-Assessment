@@ -17,6 +17,33 @@ public interface UserTopicProgressRepository
 
     int countByUserIdAndStatus(long userId, TopicStatus status);
 
+    // Completed count for a specific track by ID
+    @Query("""
+        SELECT COUNT(utp) FROM UserTopicProgress utp
+        WHERE utp.user.id = :userId
+        AND utp.topic.phase.track.id = :trackId
+        AND utp.status = 'COMPLETED'
+    """)
+    int countCompletedByUserIdAndTrackId(@org.springframework.data.repository.query.Param("userId") long userId, @org.springframework.data.repository.query.Param("trackId") long trackId);
+
+    // Completed count for a specific track by TrackType (LLD / HLD)
+    @Query("""
+        SELECT COUNT(utp) FROM UserTopicProgress utp
+        WHERE utp.user.id = :userId
+        AND utp.topic.phase.track.trackType = :trackType
+        AND utp.status = 'COMPLETED'
+    """)
+    int countCompletedByUserIdAndTrackType(@org.springframework.data.repository.query.Param("userId") long userId, @org.springframework.data.repository.query.Param("trackType") com.onlineassessment.enums.TrackType trackType);
+
+    // All completed topics for a specific track
+    @Query("""
+        SELECT utp FROM UserTopicProgress utp
+        WHERE utp.user.id = :userId
+        AND utp.topic.phase.track.id = :trackId
+        AND utp.status = 'COMPLETED'
+    """)
+    List<UserTopicProgress> findCompletedByUserIdAndTrackId(@org.springframework.data.repository.query.Param("userId") long userId, @org.springframework.data.repository.query.Param("trackId") long trackId);
+
     // Last 5 visited topics ordered by most recent
     List<UserTopicProgress> findTop5ByUserIdOrderByLastVisitedAtDesc(long userId);
 
@@ -27,5 +54,5 @@ public interface UserTopicProgressRepository
         AND utp.topic.phase.id = :phaseId
         AND utp.status = 'COMPLETED'
     """)
-    List<UserTopicProgress> findCompletedByUserIdAndPhaseId(long userId, long phaseId);
+    List<UserTopicProgress> findCompletedByUserIdAndPhaseId(@org.springframework.data.repository.query.Param("userId") long userId, @org.springframework.data.repository.query.Param("phaseId") long phaseId);
 }
